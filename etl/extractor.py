@@ -1,5 +1,5 @@
 import json
-
+from copy import deepcopy
 from pyspark.sql.types import *
 
 
@@ -39,7 +39,7 @@ class Extractor(object):
             schema = StructType(fields)
             return sqlCtx.createDataFrame(rdd, schema)
 
-        _conf = self.conf.deepCopy()
+        _conf = deepcopy(self.conf)
         directory_path = _conf['metadata']['directory_path']
         file_name = '/'.join([directory_path, _conf['metadata']['file_name']])
         delimiter = _conf['metadata']['delimiter']
@@ -48,7 +48,7 @@ class Extractor(object):
         return df
 
     def extract_parquet(self,sqlCtx):
-        _conf = self.conf.deepCopy()
+        _conf = deepcopy(self.conf)
         input_directory = _conf['metadata']['input_directory']
         df = sqlCtx.read.parquet(input_directory)
         return df
